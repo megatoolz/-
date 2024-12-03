@@ -14,25 +14,23 @@ namespace Аринин_Озон
         {
             base.OnStartup(e);
 
+            // Создаём главное окно
             var mainWindow = new MainWindow();
             var mainViewModel = new MainViewModel(_navigationService);
 
+            // Настраиваем главное окно как стартовое
+            mainWindow.DataContext = mainViewModel;
+            mainWindow.Show();
+
+            // Настраиваем навигацию
             _navigationService.OnNavigate = viewModel =>
             {
-                if (viewModel is OrderDetailsViewModel)
+                if (viewModel is OrderDetailsViewModel detailsViewModel)
                 {
-                    var detailsWindow = new OrderDetailsView { DataContext = viewModel };
-                    detailsWindow.Show();
-                }
-                else
-                {
-                    mainWindow.DataContext = viewModel;
+                    var detailsWindow = new OrderDetailsView { DataContext = detailsViewModel };
+                    detailsWindow.ShowDialog(); // Открываем модальное окно
                 }
             };
-
-            _navigationService.NavigateTo(mainViewModel);
-
-            mainWindow.Show();
         }
     }
 }
